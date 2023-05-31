@@ -9,7 +9,7 @@ nom_organismes = []
 descriptions = []
 villes = []
 
-for i in range (0, 32, 15):
+for i in range (0, 31, 15):
     url = 'https://www.emploilr.com/formation/annuaire/' + str(i) +'.html'
     reponse = requests.get(url)                                
 
@@ -58,9 +58,7 @@ for i in range (0, 32, 15):
 
 with open('urls.txt', 'w') as file:
     for lien in liens:
-        file.write(lien + '\n')
-
-print(liens)      
+        file.write(lien + '\n')    
 
 cp = []
 adresses = []
@@ -78,74 +76,113 @@ with open('urls.txt', 'r') as file:
             html = BeautifulSoup(reponse.text, features = "html.parser")
 
         divcardbody = html.find_all('div',{'class':'business-card__body'})
-        for p in divcardbody:
-            infos = []
-            infos = (p.text).split('\n')
-            new_infos = list(filter(lambda x: x != '', infos))
-
-            if (len(new_infos) == 5):
+        article = html.find_all('div',{'class':'article'})
         
-                #Adresse
-                adresse = new_infos[0]
-                adresses.append(adresse)
+        if divcardbody != []:
+            for p in divcardbody:
+                infos = []
+                infos = (p.text).split('\n')
+                new_infos = list(filter(lambda x: x != '', infos))
+
+                if (len(new_infos) == 5):
             
+                    #Adresse
+                    adresse = new_infos[0]
+                    adresses.append(adresse)
+                    
+                
 
-        
-                #Code postal
-                cpville = new_infos[1]
-                code_postal_regex = r'\b(\d{5})\b'
-                code_postal = re.search(code_postal_regex, cpville).group(1)
-                cp.append(code_postal)
+            
+                    #Code postal
+                    cpville = new_infos[1]
+                    code_postal_regex = r'\b(\d{5})\b'
+                    code_postal = re.search(code_postal_regex, cpville).group(1)
+                    cp.append(code_postal)
+                    
 
-                #Telephone
-                tel = new_infos[2]
-                tel_regex = r'Tel : (.*)'
-                tel = re.search(tel_regex, tel).group(1)
-                telephones.append(tel)
+                    #Telephone
+                    tel = new_infos[2]
+                    tel_regex = r'Tel : (.*)'
+                    tel = re.search(tel_regex, tel).group(1)
+                    telephones.append(tel)
+                    
 
-                #Courriel
-                courr = new_infos[3]
-                courr_regex = r'[\w\.-]+@[\w\.-]+'
-                courriel = re.search(courr_regex, courr).group(0)
-                courriels.append(courriel)
+                    #Courriel
+                    courr = new_infos[3]
+                    courr_regex = r'[\w\.-]+@[\w\.-]+'
+                    courriel = re.search(courr_regex, courr).group(0)
+                    courriels.append(courriel)
+                    
 
-                #Site
-                site = new_infos[4]
-                site_regex = r'Site : (http.*$)'
-                site = re.search(site_regex, site).group(1)
-                sites.append(site)
-        
-            else:
-                #Adresse
+                    #Site
+                    site = new_infos[4]
+                    site_regex = r'Site : (http.*$)'
+                    site = re.search(site_regex, site).group(1)
+                    sites.append(site)
+                    
+            
+                else:
+                    #Adresse
+                    adresse = new_infos[0]
+                    adresses.append(adresse)
+                    
+
+                    #Code postal
+                    cpville = new_infos[1]
+                    code_postal_regex = r'\b(\d{5})\b'
+                    code_postal = re.search(code_postal_regex, cpville).group(1)
+                    cp.append(code_postal)
+                    
+
+                    #Telephone
+                    tel = new_infos[2]
+                    tel_regex = r'Tel : (.*)'
+                    tel = re.search(tel_regex, tel).group(1)
+                    telephones.append(tel)
+                    
+
+                    #Courriel
+                    courriels.append('None')
+
+                    #Site
+                    site = new_infos[3]
+                    site_regex = r'Site : (http.*$)'
+                    site = re.search(site_regex, site).group(1)
+                    sites.append(site)
+                    
+        else:
+            
+            for p in article:
+                infos = []
+                infos = (p.text).split('\n')
+                new_infos = list(filter(lambda x: x != '', infos))
+
                 adresse = new_infos[0]
                 adresses.append(adresse)
 
-                #Code postal
                 cpville = new_infos[1]
                 code_postal_regex = r'\b(\d{5})\b'
                 code_postal = re.search(code_postal_regex, cpville).group(1)
                 cp.append(code_postal)
 
-                #Telephone
                 tel = new_infos[2]
                 tel_regex = r'Tel : (.*)'
                 tel = re.search(tel_regex, tel).group(1)
                 telephones.append(tel)
 
-                #Courriel
                 courriels.append('None')
 
-                #Site
-                site = new_infos[3]
-                site_regex = r'Site : (http.*$)'
-                site = re.search(site_regex, site).group(1)
-                sites.append(site)
+                sites.append('None')
 
-print(len(cp))
-print(len(adresses))
-print(len(telephones))
-print(len(courriels))
-print(len(sites))
+
+
+
+print(nom_organismes)
+print(cp)
+print(adresses)
+print(telephones)
+print(courriels)
+print(sites)
 
 
 
